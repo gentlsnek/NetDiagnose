@@ -1,0 +1,49 @@
+Timestamp,Test Type,Result
+2024-11-06 01:28:24.033056,Ping Test,"PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=116 time=38.9 ms
+64 bytes from 8.8.8.8: icmp_seq=2 ttl=116 time=33.9 ms
+64 bytes from 8.8.8.8: icmp_seq=3 ttl=116 time=25.7 ms
+64 bytes from 8.8.8.8: icmp_seq=4 ttl=116 time=29.5 ms
+
+--- 8.8.8.8 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3005ms
+rtt min/avg/max/mdev = 25.690/32.006/38.875/4.919 ms"
+2024-11-06 01:28:24.045492,DNS Lookup,DNS lookup successful. IP address: 142.251.42.14
+2024-11-06 01:28:24.045599,Speed Test,Speed test failed: module 'speedtest' has no attribute 'Speedtest'
+2024-11-06 01:28:24.045900,Port Scan,No open ports found
+2024-11-06 01:30:15.088698,Ping Test,"PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=116 time=29.0 ms
+64 bytes from 8.8.8.8: icmp_seq=2 ttl=116 time=23.6 ms
+64 bytes from 8.8.8.8: icmp_seq=3 ttl=116 time=23.7 ms
+64 bytes from 8.8.8.8: icmp_seq=4 ttl=116 time=87.3 ms
+
+--- 8.8.8.8 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3004ms
+rtt min/avg/max/mdev = 23.565/40.874/87.294/26.888 ms"
+2024-11-06 01:30:15.111025,DNS Lookup,DNS lookup successful. IP address: 142.251.42.14
+2024-11-06 01:30:15.111221,Speed Test,Speed test failed: module 'speedtest' has no attribute 'Speedtest'
+2024-11-06 01:30:15.111895,Port Scan,No open ports found
+2024-11-06 16:47:41.621347,Ping Test,"PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=116 time=27.5 ms
+64 bytes from 8.8.8.8: icmp_seq=2 ttl=116 time=27.7 ms
+64 bytes from 8.8.8.8: icmp_seq=3 ttl=116 time=26.4 ms
+64 bytes from 8.8.8.8: icmp_seq=4 ttl=116 time=25.4 ms
+
+--- 8.8.8.8 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3002ms
+rtt min/avg/max/mdev = 25.355/26.718/27.660/0.934 ms"
+2024-11-06 16:47:41.773220,DNS Lookup,DNS lookup successful. IP address: 142.250.192.78
+2024-11-06 16:47:41.773459,Speed Test,Speed test failed: module 'speedtest' has no attribute 'Speedtest'
+2024-11-06 16:47:41.774063,Port Scan,No open ports found
+2024-11-06 16:51:35.404345,Ping Test,"PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=116 time=31.6 ms
+64 bytes from 8.8.8.8: icmp_seq=2 ttl=116 time=25.9 ms
+64 bytes from 8.8.8.8: icmp_seq=3 ttl=116 time=70.9 ms
+64 bytes from 8.8.8.8: icmp_seq=4 ttl=116 time=26.4 ms
+
+--- 8.8.8.8 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3004ms
+rtt min/avg/max/mdev = 25.881/38.687/70.863/18.707 ms"
+2024-11-06 16:51:35.507020,DNS Lookup,DNS lookup successful. IP address: 142.251.42.110
+2024-11-06 16:51:58.241944,Speed Test,"Download: 16.95 Mbps, Upload: 16.49 Mbps"
+2024-11-06 16:51:58.242364,Port Scan,No open ports found

@@ -1,0 +1,60 @@
+Ping Test Result:
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=116 time=25.4 ms
+64 bytes from 8.8.8.8: icmp_seq=2 ttl=116 time=23.5 ms
+64 bytes from 8.8.8.8: icmp_seq=3 ttl=116 time=23.7 ms
+64 bytes from 8.8.8.8: icmp_seq=4 ttl=116 time=23.5 ms
+64 bytes from 8.8.8.8: icmp_seq=5 ttl=116 time=23.4 ms
+64 bytes from 8.8.8.8: icmp_seq=6 ttl=116 time=24.2 ms
+64 bytes from 8.8.8.8: icmp_seq=7 ttl=116 time=23.7 ms
+64 bytes from 8.8.8.8: icmp_seq=8 ttl=116 time=24.6 ms
+64 bytes from 8.8.8.8: icmp_seq=9 ttl=116 time=36.5 ms
+64 bytes from 8.8.8.8: icmp_seq=10 ttl=116 time=24.3 ms
+
+--- 8.8.8.8 ping statistics ---
+10 packets transmitted, 10 received, 0% packet loss, time 9015ms
+rtt min/avg/max/mdev = 23.426/25.290/36.546/3.796 ms
+
+DNS Lookup Result:
+www.google.com has IP address 142.250.66.4
+Traceroute Result:
+traceroute to 8.8.8.8 (8.8.8.8), 30 hops max, 60 byte packets
+ 1  _gateway (10.168.0.1)  27.670 ms  26.376 ms  29.587 ms
+ 2  115.245.68.161 (115.245.68.161)  30.445 ms  31.887 ms  36.232 ms
+ 3  * * *
+ 4  172.16.16.11 (172.16.16.11)  53.605 ms  39.949 ms  53.564 ms
+ 5  172.26.40.64 (172.26.40.64)  60.303 ms 72.14.211.138 (72.14.211.138)  40.303 ms 172.16.16.11 (172.16.16.11)  46.275 ms
+ 6  173.194.120.14 (173.194.120.14)  60.238 ms  42.693 ms 72.14.211.138 (72.14.211.138)  35.952 ms
+ 7  192.178.111.155 (192.178.111.155)  32.808 ms * *
+ 8  dns.google (8.8.8.8)  37.133 ms  37.118 ms  38.124 ms
+
+Speed Test Result:
+
+Network Speed Test Results: 
+Server located in Udaipur, India 
+Download Speed: 16.77 Mbps 
+Upload Speed: 17.65 Mbps 
+Ping: 20.52 ms 
+Jitter: 0.00 ms 
+
+WiFi Interface Information:
+wlp0s20f3
+Interface wlp0s20f3
+	ifindex 3
+	wdev 0x1
+	addr 50:28:4a:21:9d:00
+	ssid iBUS@MUJ
+	type managed
+	wiphy 0
+	channel 48 (5240 MHz), width: 20 MHz, center1: 5240 MHz
+	txpower 22.00 dBm
+	multicast TXQ:
+		qsz-byt	qsz-pkt	flows	drops	marks	overlmt	hashcol	tx-bytes	tx-packets
+		0	0	0	0	0	0	0	0		0
+
+WiFi Signal Strength:
+  Link Quality=47/70  Signal level=-63 dBm
+WiFi Details:
+Channel 11: 10 networks
+Network Security Check:
+Network Security Check failed: NetworkSecurityCheck.nmap_scan() takes 2 positional arguments but 3 were given

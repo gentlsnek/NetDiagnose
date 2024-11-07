@@ -14,7 +14,7 @@ if sys.platform == 'linux':
     from linux.wifianalysis import get_wireless_interface, get_iw_info, get_wifi_signal_strength, get_wifi_info
     from linux.portscan import port_scan
     from linux.security import NetworkSecurityCheck
-    from linux.logs_reporting import ReportManager
+    from linux.logs_reporting import run
 elif sys.platform == 'win32':
     from windows.network_con import ping_test, dns_lookup, trace_route
     from windows.speedtest import speed_test
@@ -60,7 +60,7 @@ Welcome to the Network Diagnostic Tool. Enter 'diagnose' to see options or 'help
         elif option == '6':
             self.security_check()
         elif option == '7':
-            ReportManager.save_and_email_report()    
+            run()
         elif option == '8':
             pass
         else:

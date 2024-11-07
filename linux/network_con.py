@@ -1,6 +1,8 @@
 import subprocess
 import socket
 
+
+
 def ping_test(destination):
     try:
         # Ping the destination
@@ -9,7 +11,7 @@ def ping_test(destination):
             print(f"Ping to {destination} successful.")
         else:
             print(f"Failed to ping to {destination}.")
-        print(result.stdout)
+        return(result.stdout)
     except subprocess.TimeoutExpired:
         print(f"Ping to {destination} timed out.")
 
@@ -19,14 +21,14 @@ def dns_lookup(domain):
         # DNS lookup for the given domain
         print(f"DNS lookup for {domain}:")
         ip_address = socket.gethostbyname(domain)
-        print(f"{domain} has IP address {ip_address}")
+        return(f"{domain} has IP address {ip_address}")
     except socket.gaierror:
-        print(f"Failed to resolve DNS for {domain}")
+        return(f"Failed to resolve DNS for {domain}")
 
 def trace_route(destination):
     try:
-        print(f"Tracing route to {destination}:\n")
+        print(f"\nTracing route to {destination}:")
         result = subprocess.run(["traceroute", destination], capture_output=True, text=True, timeout=30)
-        print(result.stdout)
+        return(result.stdout)
     except subprocess.TimeoutExpired:
-        print(f"Tracing route to {destination} timed out.")
+        return(f"\nTracing route to {destination} timed out.")

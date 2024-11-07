@@ -1,6 +1,7 @@
 import psutil
 import subprocess
 
+
 def get_wireless_interface():
     interfaces = psutil.net_if_addrs()
     for interface_name in interfaces:
@@ -12,14 +13,13 @@ def get_wireless_interface():
 def get_iw_info():
     interface = get_wireless_interface()
     if not interface:
-        print("No wireless interface found.")
-        return
+        return("No wireless interface found.")
     try:
         result = subprocess.check_output(["iw", "dev", interface, "info"], universal_newlines=True)
         print("Wi-Fi Interface Info (via iw):")
-        print(result)
+        return(result)
     except subprocess.CalledProcessError as e:
-        print(f"Error retrieving Wi-Fi interface info via iw: {e}")
+        return(f"Error retrieving Wi-Fi interface info via iw: {e}")
 
 # Function to retrieve signal strength and link quality using iwconfig
 def get_wifi_signal_strength():
@@ -28,9 +28,9 @@ def get_wifi_signal_strength():
         print("Wi-Fi Signal Strength (via iwconfig):")
         for line in result.splitlines():
             if "Link Quality" in line:
-                print(f"  {line.strip()}")
+                return(f"  {line.strip()}")
     except subprocess.CalledProcessError as e:
-        print(f"Error retrieving Wi-Fi signal strength via iwconfig: {e}")
+        return(f"Error retrieving Wi-Fi signal strength via iwconfig: {e}")
 
 # Function to retrieve Wi-Fi info using nmcli
 def get_wifi_info():
@@ -49,9 +49,9 @@ def get_wifi_info():
                 channels[channel] = 1
         print("\nChannel Interference:")
         for channel, count in channels.items():
-            print(f"Channel {channel}: {count} networks")
+            return(f"Channel {channel}: {count} networks")
     except subprocess.CalledProcessError as e:
-        print(f"Error retrieving Wi-Fi info via nmcli: {e}")
+        return(f"Error retrieving Wi-Fi info via nmcli: {e}")
 
 
 

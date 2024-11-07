@@ -22,11 +22,11 @@ class NetworkSecurityCheck:
         port = int(port)
         try:
             result = subprocess.run(["nmap", "-Pn", "-p", str(port), target_ip], capture_output=True, text=True)
-            print(result.stdout)
+            return(result.stdout)
         except FileNotFoundError:
-            print("nmap is not installed on this system.")
+            return("nmap is not installed on this system.")
         except Exception as e:
-            print(f"Error running nmap: {e}")
+            return(f"Error running nmap: {e}")
 
     @staticmethod
     def firewall_detection(target_ip, port):
@@ -46,17 +46,18 @@ class NetworkSecurityCheck:
             response = sr1(packet, timeout=2, verbose=0)
 
             if response is None:
-                print(f"Port {port} seems filtered or blocked by a firewall.")
+                return(f"Port {port} seems filtered or blocked by a firewall.")
             elif response.haslayer(TCP):
                 if response.getlayer(TCP).flags == 0x12:  # SYN-ACK response
-                    print(f"Port {port} is open and reachable.")
+                    return(f"Port {port} is open and reachable.")
                 elif response.getlayer(TCP).flags == 0x14:  # RST response
-                    print(f"Port {port} is closed but not filtered by a firewall.")
-            print(f"Unexpected response on port {port}.")
+                    return(f"Port {port} is closed but not filtered by a firewall.")
+            else:    
+             return(f"Unexpected response on port {port}.")
         except PermissionError:
-            print("Firewall detection requires elevated permissions (e.g., run as root).")
+            return("Firewall detection requires elevated permissions (e.g., run as root).")
         except Exception as e:
-            print(f"Error in firewall detection: {e}")
+            return(f"Error in firewall detection: {e}")
 
     @staticmethod
     def ssl_tls_inspection(hostname, port=443):
@@ -102,4 +103,4 @@ class NetworkSecurityCheck:
 
 
             
-        print(result)
+        return(result)

@@ -8,7 +8,7 @@ def ping_test(destination):
         if result.returncode == 0:
             print(f"Ping to {destination} successful.")
         else:
-            print(f"Ping to {destination} failed.")
+            print(f"Failed to ping to {destination}.")
         print(result.stdout)
     except subprocess.TimeoutExpired:
         print(f"Ping to {destination} timed out.")

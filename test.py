@@ -1,99 +1,118 @@
 import socket
-import platform
+import ssl
 import subprocess
-import speedtest
-import time
-from datetime import datetime
-import csv
-import os
+from scapy.all import IP, TCP, sr1
 
-class NetworkDiagnostics:
-    def __init__(self):
-        self.results_file = 'network_diagnostics.csv'
-        self.initialize_results_file()
-    
-    def initialize_results_file(self):
-        if not os.path.exists(self.results_file):
-            with open(self.results_file, 'w', newline='') as file:
-                writer = csv.writer(file)
-                writer.writerow(['Timestamp', 'Test Type', 'Result'])
-    
-    def ping_test(self, host="8.8.8.8", count=4):
-        """Perform ping test to specified host"""
+from linux.portscan import port_scan;
+
+
+class NetworkSecurityCheck:
+    def nmap_scan(target_ip, port):
+        """
+        Runs an nmap scan on the target IP and port if nmap is installed.
+
+        Args:
+            target_ip (str): The IP address of the target.
+            port (int): Port number to scan.
+
+        Returns:
+            str: nmap scan result.
+        """
         try:
-            param = '-n' if platform.system().lower() == 'windows' else '-c'
-            command = ['ping', param, str(count), host]
-            output = subprocess.check_output(command).decode().strip()
-            return True, output
-        except subprocess.CalledProcessError:
-            return False, "Ping test failed"
-    
-    def dns_lookup(self, domain="google.com"):
-        """Perform DNS lookup for specified domain"""
-        try:
-            ip_address = socket.gethostbyname(domain)
-            return True, f"DNS lookup successful. IP address: {ip_address}"
-        except socket.gaierror:
-            return False, "DNS lookup failed"
-    
-    def speed_test(self):
-        """Perform internet speed test"""
-        try:
-            st = speedtest.Speedtest()
-            print("Testing download speed...")
-            download_speed = st.download() / 1_000_000  # Convert to Mbps
-            print("Testing upload speed...")
-            upload_speed = st.upload() / 1_000_000  # Convert to Mbps
-            return True, f"Download: {download_speed:.2f} Mbps, Upload: {upload_speed:.2f} Mbps"
+            result = subprocess.run(["nmap", "-Pn", "-p", str(port), target_ip], capture_output=True, text=True)
+            print(result.stdout)
+        except FileNotFoundError:
+            print("nmap is not installed on this system.")
         except Exception as e:
-            return False, f"Speed test failed: {str(e)}"
-    
-    def port_scan(self, host="localhost", ports=[80, 443, 22, 21]):
-        """Scan specific ports on the specified host"""
-        results = []
-        for port in ports:
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            sock.settimeout(1)
-            result = sock.connect_ex((host, port))
-            if result == 0:
-                results.append(f"Port {port} is open")
-            sock.close()
-        return True, "\n".join(results) if results else "No open ports found"
-    
-    def log_result(self, test_type, result):
-        """Log test results to CSV file"""
-        with open(self.results_file, 'a', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerow([datetime.now(), test_type, result])
-    
-    def run_diagnostics(self):
-        """Run all diagnostic tests"""
-        print("Starting Network Diagnostics...")
-        
-        # Ping Test
-        print("\nPerforming ping test...")
-        success, ping_result = self.ping_test()
-        self.log_result("Ping Test", ping_result)
-        print(ping_result)
-        
-        # DNS Lookup
-        print("\nPerforming DNS lookup...")
-        success, dns_result = self.dns_lookup()
-        self.log_result("DNS Lookup", dns_result)
-        print(dns_result)
-        
-        # Speed Test
-        print("\nPerforming speed test...")
-        success, speed_result = self.speed_test()
-        self.log_result("Speed Test", speed_result)
-        print(speed_result)
-        
-        # Port Scan
-        print("\nPerforming port scan...")
-        success, port_result = self.port_scan()
-        self.log_result("Port Scan", port_result)
-        print(port_result)
+            print(f"Error running nmap: {e}")
 
+    @staticmethod
+    def firewall_detection(target_ip, port):
+        """
+        Checks if there is a firewall blocking certain ports on the target IP.
+
+        Args:
+            target_ip (str): The IP address of the target.
+            port (int): Port number to check.
+
+        Returns:
+            str: Result of the firewall check.
+        """
+        try:
+            packet = IP(dst=target_ip) / TCP(dport=port, flags='S')
+            response = sr1(packet, timeout=2, verbose=0)
+
+            if response is None:
+                print(f"Port {port} seems filtered or blocked by a firewall.")
+            elif response.haslayer(TCP):
+                if response.getlayer(TCP).flags == 0x12:  # SYN-ACK response
+                    print(f"Port {port} is open and reachable.")
+                elif response.getlayer(TCP).flags == 0x14:  # RST response
+                    print(f"Port {port} is closed but not filtered by a firewall.")
+            print(f"Unexpected response on port {port}.")
+        except PermissionError:
+            print("Firewall detection requires elevated permissions (e.g., run as root).")
+        except Exception as e:
+            print(f"Error in firewall detection: {e}")
+
+    @staticmethod
+    def ssl_tls_inspection(hostname, port=443):
+        """
+        Inspects SSL/TLS certificate and configuration for potential vulnerabilities.
+
+        Args:
+            hostname (str): The hostname of the target server.
+            port (int): Port to connect, typically 443 for HTTPS.
+
+        Returns:
+            dict: SSL/TLS details or errors.
+        """
+        result = {
+            "hostname": hostname,
+            "ssl_version": None,
+            "certificate_valid": False,
+            "issuer": None,
+            "expiry_date": None,
+            "error": None
+        }
+
+        try:
+            context = ssl.create_default_context()
+            with socket.create_connection((hostname, port)) as sock:
+                with context.wrap_socket(sock, server_hostname=hostname) as ssock:
+                    cert = ssock.getpeercert()
+                    result["ssl_version"] = ssock.version()
+
+                    # Check for hostname validity manually (if ssl.match_hostname is unavailable)
+                    common_names = [entry[1] for entry in cert.get('subject', []) if entry[0] == 'commonName']
+                    subject_alt_names = [san[1] for san in cert.get('subjectAltName', [])]
+
+                    if hostname in common_names or hostname in subject_alt_names:
+                        result["certificate_valid"] = True
+                    result["issuer"] = cert.get("issuer")
+                    result["expiry_date"] = cert.get("notAfter")
+        except ssl.SSLCertVerificationError as e:
+            result["error"] = f"SSL Certificate Verification Error: {e}"
+        except Exception as e:
+            result["error"] = f"Unexpected error: {e}"
+
+        print(result)
+
+# Example usage when running this script directly
 if __name__ == "__main__":
-    diagnostics = NetworkDiagnostics()
-    diagnostics.run_diagnostics()
+    target_ip = "8.8.8.8"
+    port = 300
+    hostname = "www.google.com"
+
+
+    # Perform nmap scan
+    NetworkSecurityCheck.nmap_scan(target_ip, port)
+    
+
+    # Perform firewall detection (requires root permissions)
+    NetworkSecurityCheck.firewall_detection(target_ip, port)
+    
+
+    # Perform SSL/TLS inspection
+    NetworkSecurityCheck.ssl_tls_inspection(hostname)
+    

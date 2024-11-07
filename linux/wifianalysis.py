@@ -33,13 +33,15 @@ def get_wifi_signal_strength():
         print(f"Error retrieving Wi-Fi signal strength via iwconfig: {e}")
 
 # Function to retrieve Wi-Fi info using nmcli
-def get_wifi_info_nmcli():
+def get_wifi_info():
     try:
         result = subprocess.check_output(["nmcli", "-t", "-f", "SSID,SIGNAL,SECURITY,CHAN", "device", "wifi", "list"], universal_newlines=True)
         print("Available Wi-Fi Networks (via nmcli):")
         channels = {}
         for line in result.splitlines():
             ssid, signal, security, channel = line.split(":")
+            if not security:
+                security = "None"
             print(f"SSID: {ssid}, Signal Strength: {signal}%, Security: {security}, Channel: {channel}")
             if channel in channels:
                 channels[channel] += 1
@@ -50,6 +52,7 @@ def get_wifi_info_nmcli():
             print(f"Channel {channel}: {count} networks")
     except subprocess.CalledProcessError as e:
         print(f"Error retrieving Wi-Fi info via nmcli: {e}")
+
 
 
 

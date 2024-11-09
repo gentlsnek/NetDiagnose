@@ -43,7 +43,7 @@ Welcome to the Network Diagnostic Tool. Enter 'diagnose' to see options or 'help
               "4. Wi-Fi Analysis\n"
               "5. Port Scan\n"
               "6. Security Information\n"
-              "7. Report Logging\n"
+              "7. Report Full Test Log\n"
               "8. Terminal\n"
         )
         option = input("Enter Option: ")

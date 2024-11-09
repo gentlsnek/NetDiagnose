@@ -137,6 +137,7 @@ def run_all_tests(report_manager):
     print("All tests have been run and appended to the report.")
 
 def run():
+    print("running tests.....")
     # Initialize the report manager
     report_manager = ReportManager("network_diagnostic_report.txt")
     

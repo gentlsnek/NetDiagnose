@@ -5,7 +5,7 @@ import socket
 
 def speed_test():
         try:
-            print("Starting speed test...")
+            print("Starting speed test.....")
             st = speedtest.Speedtest()
             server = st.get_best_server()
             print("Testing download speed...")

@@ -19,9 +19,10 @@ elif sys.platform == 'win32':
     from windows.network_con import ping_test, dns_lookup, trace_route
     from windows.speedtest import speed_test
     from windows.network_interface import network_interfaces_info
-    from windows.wifianalysis import get_wireless_interface, get_iw_info, get_wifi_signal_strength, get_wifi_info_nmcli
+    from windows.wifianalysis import get_wireless_interface, get_iw_info, get_wifi_signal_strength, get_wifi_info
     from windows.portscan import port_scan
     from windows.security import NetworkSecurityCheck
+    from windows.logs_reporting import ReportManager
 
 class NetworkDiagnose(cmd.Cmd):
     prompt = "NetDiagnose>>>"
@@ -72,7 +73,7 @@ Welcome to the Network Diagnostic Tool. Enter 'diagnose' to see options or 'help
         input_route = input("Enter Route (default: 8.8.8.8): ") or "8.8.8.8"
 
         print(ping_test(input_ip))
-        print(dns_lookup(input_dns))
+        print(dns_lookup(input_dns) + "\n")
         print(trace_route(input_route))
 
     def run_speed_test(self):

@@ -13,15 +13,8 @@ if sys.platform == 'linux':
     from linux.network_con import ping_test, dns_lookup, trace_route
     from linux.speedtest import speed_test
     from linux.wifianalysis import get_wireless_interface, get_iw_info, get_wifi_signal_strength, get_wifi_info
-    from linux.portscan import port_scan
     from linux.security import NetworkSecurityCheck
 
-elif sys.platform == 'win32':
-    from windows.network_con import ping_test, dns_lookup, trace_route
-    from windows.speedtest import speed_test
-    from windows.wifianalysis import get_wireless_interface, get_iw_info, get_wifi_signal_strength, get_wifi_info
-    from windows.portscan import port_scan
-    from windows.security import NetworkSecurityCheck
 
 class ReportManager:
     def __init__(self, filename="network_diagnostic_report.txt"):

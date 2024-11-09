@@ -1,33 +1,9 @@
 import socket
 import ssl
 import subprocess
-
+from scapy.all import IP, TCP, sr1
 
 class NetworkSecurityCheck:
-    @staticmethod
-    def install_nmap():
-        """
-        Installs nmap using Chocolatey if it is not installed.
-        Only works if Chocolatey is installed on the system.
-        """
-        try:
-            # Check if nmap is already installed
-            result = subprocess.run(["nmap", "--version"], capture_output=True, text=True)
-            if "Nmap version" in result.stdout:
-                print("nmap is already installed.")
-                return
-
-            # Attempt to install nmap using Chocolatey
-            print("nmap is not installed. Attempting installation with Chocolatey...")
-            choco_install = subprocess.run(["choco", "install", "nmap", "-y"], capture_output=True, text=True)
-            if choco_install.returncode == 0:
-                print("nmap installed successfully.")
-            else:
-                print("Failed to install nmap. Ensure Chocolatey is installed and try again.")
-        except FileNotFoundError:
-            print("Chocolatey is not installed. Please install Chocolatey to use automatic nmap installation.")
-        except Exception as e:
-            print(f"Error installing nmap: {e}")
 
     @staticmethod
     def nmap_scan(target_ip, port):
@@ -43,23 +19,46 @@ class NetworkSecurityCheck:
         """
         port = int(port)
         try:
-            # Check if nmap is installed
             result = subprocess.run(["nmap", "-Pn", "-p", str(port), target_ip], capture_output=True, text=True)
-            print(result.stdout)
+            return(result.stdout)
         except FileNotFoundError:
-            print("nmap is not installed. Attempting to install nmap...")
-            NetworkSecurityCheck.install_nmap()
-            # Try running nmap again after installation
-            try:
-                result = subprocess.run(["nmap", "-Pn", "-p", str(port), target_ip], capture_output=True, text=True)
-                print(result.stdout)
-            except Exception as e:
-                print(f"Error running nmap after installation attempt: {e}")
+            return("nmap is not installed on this system. Please install nmap.")
         except Exception as e:
-            print(f"Error running nmap: {e}")
+            return(f"Error running nmap: {e}")
 
     @staticmethod
-    def ssl_tls_inspection(hostname, port=443):
+    def firewall_detection(target_ip, port):
+        """
+        Checks if there is a firewall blocking certain ports on the target IP.
+
+        Args:
+            target_ip (str): The IP address of the target.
+            port (int): Port number to check.
+
+        Returns:
+            str: Result of the firewall check.
+        """
+        port = int(port)
+        try:
+            packet = IP(dst=target_ip) / TCP(dport=port, flags='S')
+            response = sr1(packet, timeout=2, verbose=0)
+
+            if response is None:
+                return(f"Port {port} seems filtered or blocked by a firewall. \n")
+            elif response.haslayer(TCP):
+                if response.getlayer(TCP).flags == 0x12:  # SYN-ACK response
+                    return(f"Port {port} is open and reachable.")
+                elif response.getlayer(TCP).flags == 0x14:  # RST response
+                    return(f"Port {port} is closed but not filtered by a firewall. \n")
+            else:    
+                return(f"Unexpected response on port {port}. \n")
+        except PermissionError:
+            return("Firewall detection requires elevated permissions (e.g., run as Administrator). \n")
+        except Exception as e:
+            return(f"Error in firewall detection: {e} \n")
+
+    @staticmethod
+    def ssl_tls_inspection(hostname, port):
         """
         Inspects SSL/TLS certificate and configuration for potential vulnerabilities.
 
@@ -86,7 +85,7 @@ class NetworkSecurityCheck:
                     cert = ssock.getpeercert()
                     result["ssl_version"] = ssock.version()
 
-                    # Check for hostname validity manually
+                    # Check for hostname validity manually (if ssl.match_hostname is unavailable)
                     common_names = [entry[1] for entry in cert.get('subject', []) if entry[0] == 'commonName']
                     subject_alt_names = [san[1] for san in cert.get('subjectAltName', [])]
 
@@ -99,4 +98,4 @@ class NetworkSecurityCheck:
         except Exception as e:
             result["error"] = f"Unexpected error: {e}"
 
-        print(result)
+        return(result)

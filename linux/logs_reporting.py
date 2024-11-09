@@ -6,14 +6,16 @@ from email.utils import formataddr
 
 # Allow import of modules from both Linux and Windows directories
 sys.path.append('linux')
-sys.path.append('windows')
 
-# Import platform-specific modules
-if sys.platform == 'linux':
-    from linux.network_con import ping_test, dns_lookup, trace_route
-    from linux.speedtest import speed_test
-    from linux.wifianalysis import get_wireless_interface, get_iw_info, get_wifi_signal_strength, get_wifi_info
-    from linux.security import NetworkSecurityCheck
+
+from linux.network_con import ping_test, dns_lookup, trace_route
+from linux.speedtest import speed_test
+from linux.network_interface import network_interfaces_info
+from linux.wifianalysis import get_wireless_interface, get_iw_info, get_wifi_signal_strength, get_wifi_info
+from linux.portscan import port_scan
+from linux.security import NetworkSecurityCheck
+
+
 
 
 class ReportManager:

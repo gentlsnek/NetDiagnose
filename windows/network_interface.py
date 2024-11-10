@@ -1,4 +1,5 @@
 import psutil
+import socket
 
 def network_interfaces_info():
     # Retrieve network interface details
@@ -12,18 +13,19 @@ def network_interfaces_info():
         if interface_name in stats:
             iface_stats = stats[interface_name]
             print(f"  Status: {'Up' if iface_stats.isup else 'Down'}")
-            print(f"  Duplex: {iface_stats.duplex}")
-            print(f"  Speed: {iface_stats.speed} Mbps")
+            print(f"  Duplex: {iface_stats.duplex if iface_stats.duplex is not None else 'Unknown'}")
+            print(f"  Speed: {iface_stats.speed} Mbps" if iface_stats.speed is not None else "Speed: Unknown")
             print(f"  MTU: {iface_stats.mtu}")
         
         # Display IP addresses and MAC address
         for address in addresses:
             if address.family == psutil.AF_LINK:
                 print(f"  MAC Address: {address.address}")
-            elif address.family == psutil.AF_INET:
+            elif address.family == socket.AF_INET:
                 print(f"  IPv4 Address: {address.address}")
                 print(f"  Netmask: {address.netmask}")
                 print(f"  Broadcast IP: {address.broadcast}")
-            elif address.family == psutil.AF_INET6:
+            elif address.family == socket.AF_INET6:
                 print(f"  IPv6 Address: {address.address}")
                 print(f"  Netmask: {address.netmask}")
+

@@ -1,0 +1,217 @@
+ Getting Server Info
+ Server:Bharat Datacenter, Location: Noida in India
+ Running Speed Test...
+ Calculating download speed
+ Download Speed  43.99 mbps 
+
+ Calculating Upload speed
+
+ Upload Speed  4.19 mbps 
+
+Calculating Ping and Jitter speed
+
+ Ping  34.56 ms 
+ Jitter  0.00 ms
+ Running Network Information Tests...
+
+ Ping Test: Ping to 8.8.8.8 succesfull 
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=110 time=32.5 ms
+64 bytes from 8.8.8.8: icmp_seq=2 ttl=110 time=55.5 ms
+64 bytes from 8.8.8.8: icmp_seq=3 ttl=110 time=44.8 ms
+64 bytes from 8.8.8.8: icmp_seq=4 ttl=110 time=22.8 ms
+64 bytes from 8.8.8.8: icmp_seq=5 ttl=110 time=46.2 ms
+64 bytes from 8.8.8.8: icmp_seq=6 ttl=110 time=45.2 ms
+64 bytes from 8.8.8.8: icmp_seq=7 ttl=110 time=45.3 ms
+64 bytes from 8.8.8.8: icmp_seq=8 ttl=110 time=42.1 ms
+64 bytes from 8.8.8.8: icmp_seq=9 ttl=110 time=26.5 ms
+64 bytes from 8.8.8.8: icmp_seq=10 ttl=110 time=30.2 ms
+
+--- 8.8.8.8 ping statistics ---
+10 packets transmitted, 10 received, 0% packet loss, time 9012ms
+rtt min/avg/max/mdev = 22.776/39.099/55.522/9.919 ms
+
+ DNS Lookup for www.google.com
+ DNS Lookup: www.google.com has IP address 142.250.194.196
+ Tracing Route to 8.8.8.8
+
+ Trace Route: traceroute to 8.8.8.8 (8.8.8.8), 30 hops max, 60 byte packets
+ 1  _gateway (172.20.10.1)  3.295 ms  3.272 ms  3.261 ms
+ 2  * * *
+ 3  * * *
+ 4  * * *
+ 5  * * *
+ 6  * * *
+ 7  * * *
+ 8  * * *
+ 9  * * *
+10  * * *
+11  * * *
+12  * * *
+13  * * *
+14  dns.google (8.8.8.8)  29.895 ms *  30.320 ms
+
+ Running Wi-Fi Analysis...
+ Signal Strength:   Link Quality=62/70  Signal level=-48 dBm 
+
+ Interface Info: Interface wlp0s20f3
+	ifindex 3
+	wdev 0x1
+	addr 50:28:4a:21:9d:00
+	ssid erwins iphone 13 mini
+	type managed
+	wiphy 0
+	channel 149 (5745 MHz), width: 80 MHz, center1: 5775 MHz
+	txpower 22.00 dBm
+	multicast TXQ:
+		qsz-byt	qsz-pkt	flows	drops	marks	overlmt	hashcol	tx-bytes	tx-packets
+		0	0	0	0	0	0	0	0		0
+
+
+ Networks: 
+ SSID: erwins iphone 13 mini, Signal Strength: 87%, Security: WPA2 WPA3, Channel: 149
+ SSID: iBUS@MUJ, Signal Strength: 55%, Security: None, Channel: 165
+ SSID: iBUS@MUJ, Signal Strength: 49%, Security: None, Channel: 1
+ SSID: iBUS@MUJ, Signal Strength: 49%, Security: None, Channel: 1
+ SSID: iBUS@MUJ, Signal Strength: 37%, Security: None, Channel: 11
+ SSID: iBUS@MUJ, Signal Strength: 37%, Security: None, Channel: 11
+ SSID: iBUS@MUJ, Signal Strength: 32%, Security: None, Channel: 157
+ SSID: iBUS@MUJ, Signal Strength: 30%, Security: None, Channel: 11
+ SSID: iBUS@MUJ, Signal Strength: 20%, Security: None, Channel: 40
+ SSID: iBUS@MUJ, Signal Strength: 17%, Security: None, Channel: 48
+ SSID: iBUS@MUJ, Signal Strength: 17%, Security: None, Channel: 60
+ SSID: iBUS@MUJ, Signal Strength: 17%, Security: None, Channel: 60
+
+
+ Channels info:
+ Channel 149: 1 networks
+ Channel 165: 1 networks
+ Channel 1: 2 networks
+ Channel 11: 3 networks
+ Channel 157: 1 networks
+ Channel 40: 1 networks
+ Channel 48: 1 networks
+ Channel 60: 2 networks
+ Running Port Scan...
+ Used Ports: 
+ Port 53: Unknown
+ Port 68: Unknown
+ Port 546: Unknown
+ Port 631: Unknown
+ Port 5353: Unknown
+ Port 33572: code
+ Port 35066: Unknown
+ Port 35824: whatsapp-linux-app
+ Port 36989: code
+ Port 37242: Unknown
+ Port 37473: firefox
+ Port 37494: firefox
+ Port 38649: Unknown
+ Port 38662: Unknown
+ Port 38742: firefox
+ Port 40022: firefox
+ Port 40168: firefox
+ Port 40328: code
+ Port 40600: Unknown
+ Port 40668: Unknown
+ Port 40688: firefox
+ Port 40694: firefox
+ Port 40800: code
+ Port 41336: Unknown
+ Port 42780: code
+ Port 43790: Unknown
+ Port 44020: Unknown
+ Port 44219: Unknown
+ Port 45849: Unknown
+ Port 46011: Unknown
+ Port 46168: code
+ Port 46184: code
+ Port 46498: code
+ Port 46866: firefox
+ Port 47718: firefox
+ Port 49225: Unknown
+ Port 49848: Unknown
+ Port 50014: firefox
+ Port 50051: Unknown
+ Port 50524: Unknown
+ Port 51732: firefox
+ Port 54244: Unknown
+ Port 55112: firefox
+ Port 56132: Unknown
+ Port 57506: Unknown
+ Port 57523: Unknown
+ Port 57797: Unknown
+ Port 58396: code
+ Port 59866: Unknown
+ Port 60506: Unknown
+ Port 60508: firefox
+ Port 60520: Unknown
+ Port 60635: Unknown
+ 
+
+ Free ports:
+ Ports 1-52 are free
+ Ports 54-67 are free
+ Ports 69-545 are free
+ Ports 547-630 are free
+ Ports 632-5352 are free
+ Ports 5354-33571 are free
+ Ports 33573-35065 are free
+ Ports 35067-35823 are free
+ Ports 35825-36988 are free
+ Ports 36990-37241 are free
+ Ports 37243-37472 are free
+ Ports 37474-37493 are free
+ Ports 37495-38648 are free
+ Ports 38650-38661 are free
+ Ports 38663-38741 are free
+ Ports 38743-40021 are free
+ Ports 40023-40167 are free
+ Ports 40169-40327 are free
+ Ports 40329-40599 are free
+ Ports 40601-40667 are free
+ Ports 40669-40687 are free
+ Ports 40689-40693 are free
+ Ports 40695-40799 are free
+ Ports 40801-41335 are free
+ Ports 41337-42779 are free
+ Ports 42781-43789 are free
+ Ports 43791-44019 are free
+ Ports 44021-44218 are free
+ Ports 44220-45848 are free
+ Ports 45850-46010 are free
+ Ports 46012-46167 are free
+ Ports 46169-46183 are free
+ Ports 46185-46497 are free
+ Ports 46499-46865 are free
+ Ports 46867-47717 are free
+ Ports 47719-49224 are free
+ Ports 49226-49847 are free
+ Ports 49849-50013 are free
+ Ports 50015-50050 are free
+ Ports 50052-50523 are free
+ Ports 50525-51731 are free
+ Ports 51733-54243 are free
+ Ports 54245-55111 are free
+ Ports 55113-56131 are free
+ Ports 56133-57505 are free
+ Ports 57507-57522 are free
+ Ports 57524-57796 are free
+ Ports 57798-58395 are free
+ Ports 58397-59865 are free
+ Ports 59867-60505 are free
+ Port 60507 is free
+ Ports 60509-60519 are free
+ Ports 60521-60634 are free
+ Ports 60636-65535 are free
+ Running Security Check...
+ Nmap Scan: Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-11-14 23:26 IST
+Nmap scan report for dns.google (8.8.8.8)
+Host is up.
+
+PORT    STATE    SERVICE
+300/tcp filtered unknown
+
+Nmap done: 1 IP address (1 host up) scanned in 2.02 seconds
+
+ Firewall Detection: Firewall detection requires elevated permissions (e.g., run as root).

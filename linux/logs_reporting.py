@@ -1,4 +1,3 @@
-import sys
 import os
 from email.message import EmailMessage
 import smtplib
@@ -9,7 +8,7 @@ class ReportManager:
         self.filename = filename
         self.content = []
 
-    def append_to_report(self, text):
+    def append_to_report(self,text):
         """Appends given text to the report content list."""
         self.content.append(text)
 
@@ -17,7 +16,6 @@ class ReportManager:
       if not self.content:
         print("Error: Report content is empty.")
         return
-
     # Convert all items in content to strings and join them with newline for better formatting
       with open(self.filename, "w") as file:
         file.writelines(str(line) + "\n" for line in self.content)
@@ -53,24 +51,13 @@ class ReportManager:
         except Exception as e:
             print(f"Error sending email: {e}")
 
-    def save_and_email_report(self):
+    def save_and_email_report():
         """Saves the report to a file and optionally emails it."""
-        self.save_report()
-        recipient_email = input("Enter the recipient email address (or leave blank to skip): ").strip()
         
+        recipient_email = input("Enter the recipient email address (or leave blank to skip): ").strip()
         if recipient_email:
-            self.email_report(recipient_email)
+            ReportManager.email_report(recipient_email)
         else:
+            ReportManager.save_report()
             print("No email entered. Report saved locally.")
 
-def run():
-    print("running tests.....")
-    # Initialize the report manager
-    report_manager = ReportManager("network_diagnostic_report.txt")
-
-    
-    # Save the report locally and prompt the user for email option
-    report_manager.save_and_email_report()
-
-if __name__ == "__main__":
-    run()

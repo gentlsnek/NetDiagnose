@@ -2,7 +2,7 @@ import speedtest
 import time
 import statistics
 import socket
-
+import threading
 def get_server():
     """Retrieve and return the best server information."""
     try:
@@ -33,6 +33,7 @@ def get_upspeed():
         return upload_speed
     except Exception as e:
         return f" An error occurred during upload speed test: {e}"
+
 def get_ping():
     """Measure and return the ping value in ms."""
     try:
@@ -49,10 +50,21 @@ def get_jitter():
         st = speedtest.Speedtest()
         st.get_best_server()  # Make sure the server is selected
         ping_times = []
-        for _ in range(10):  # Take 10 ping samples
+
+        def ping_test():
             ping = st.results.ping
             ping_times.append(ping)
-            time.sleep(0.2)  # Small delay between pings
+
+        threads = []
+        for _ in range(10):  # Take 10 ping samples
+            thread = threading.Thread(target=ping_test)
+            thread.start()
+            threads.append(thread)
+            time.sleep(0.02)  # Small delay between starting threads
+
+        for thread in threads:
+            thread.join()
+
         # Calculate jitter as the standard deviation of ping times
         jitter = statistics.stdev(ping_times) if len(ping_times) > 1 else 0
         return jitter

@@ -1,7 +1,11 @@
+import os
+from email.message import EmailMessage
+import smtplib
+from email.utils import formataddr
 import tkinter as tk
 import sys
 import customtkinter as ctk
-from tkinter import Text
+from tkinter import Text, simpledialog, messagebox
 
 # Allow import of modules from both Linux and Windows directories
 sys.path.append('linux')
@@ -14,7 +18,7 @@ if sys.platform == 'linux':
     from linux.wifianalysis import get_iw_info, get_wifi_signal_strength, get_wifi_info
     from linux.portscan import port_scan
     from linux.security import NetworkSecurityCheck
-    from linux.logs_reporting import run
+    from linux.logs_reporting import ReportManager
 elif sys.platform == 'win32':
     from windows.network_con import ping_test, dns_lookup, trace_route
     from windows.speedtest import speed_test
@@ -29,6 +33,8 @@ class NetworkDiagnoseApp(ctk.CTk):
         self.title("NetDiagnose")
         self.geometry("1300x900")
         self.resizable(False, False)  # Prevent resizing
+
+        self.report_manager = ReportManager()  # Initialize ReportManager
 
         # Set up the grid layout
         self.configure_grid()
@@ -62,9 +68,8 @@ class NetworkDiagnoseApp(ctk.CTk):
         self.system_info_text.pack(padx=5, pady=5)
         self.display_system_info()
 
-
-        #set welcome
-        self.output_text.insert(tk.END, "Welcome to NetDiagnose, A network diagnostic assistant that will help you diagnose your network \nby providing you all the information you need about your network")
+        # Set welcome message
+        self.output_text.insert(tk.END, "Welcome to NetDiagnose, A network diagnostic assistant that will help you diagnose your network\nby providing you all the information you need about your network")
 
         # Diagnostic buttons
         buttons = [
@@ -73,41 +78,32 @@ class NetworkDiagnoseApp(ctk.CTk):
             ("Wi-Fi Analysis", self.wifi_analysis),
             ("Port Scan", self.run_port_scan),
             ("Security Check", self.security_check),
-            ("Run Full Report", self.run_full_report)
+            ("Run Full Report", self.log_save_email)
         ]
 
         for i, (name, command) in enumerate(buttons):
             button = ctk.CTkButton(button_frame, text=name, command=command, width=180, height=35)
             button.grid(row=i, column=0, padx=10, pady=5, sticky="ew")
 
-        # Clear and exit buttons
-        #clear_button = ctk.CTkButton(button_frame, text="Clear Output", command=self.clear_output, width=180, height=35)
-        #clear_button.grid(row=len(buttons), column=0, padx=10, pady=10, sticky="ew")
-
+        # Exit button
         exit_button = ctk.CTkButton(button_frame, text="Exit", command=self.quit, width=180, height=35)
         exit_button.grid(row=len(buttons) + 1, column=0, padx=10, pady=10, sticky="ew")
 
     def display_system_info(self):
         """Fetch and display system information in the third column."""
-        # Example placeholder system information
         network = network_interfaces_info()
         interface = network[0]
         address = network[1]
 
         for info in interface:
-            self.system_info_text.insert(tk.END,f"{info}")
+            self.system_info_text.insert(tk.END, f"{info}")
 
         for addr in address:
             self.system_info_text.insert(tk.END, f"{addr}")
-        #self.system_info_text.insert(tk.END, f"{network[0]} \n {network[1]}")
-    """
-    def clear_output(self):
-        ""Clear the output text area.""
-        self.output_text.delete("1.0", tk.END)
-    """
+
     def append_to_output(self, text):
-        
-        """Append text to the output area."""
+        """Append text to the output area and log it."""
+        self.report_manager.append_to_report(text)  # Log to report
         self.output_text.insert(tk.END, text + "\n")
         self.output_text.see(tk.END)
 
@@ -127,17 +123,14 @@ class NetworkDiagnoseApp(ctk.CTk):
         self.append_to_output(f" DNS Lookup: {dns_lookup(dns)}")
         self.output_text.update_idletasks()
         self.append_to_output(f" Tracing Route to {route}\n")
-        self.append_to_output(f" Trace Route: {trace_route(route)}")
-
-
-
-    #speed test
+        self.append_to_output(f" Trace Route: {trace_route(route)}")    
+       
     def run_speed_test(self):
         self.output_text.delete("1.0", tk.END)
         self.append_to_output(" Getting Server Info")
         self.output_text.update_idletasks()
         server = get_server()
-        if type(server) == 'str':
+        if type(server) == 'String':
             self.append_to_output(f" Server: {server}")
         else:
             self.append_to_output(f" Server:{server['sponsor']}, Location: {server['name']} in {server['country']}")
@@ -147,20 +140,23 @@ class NetworkDiagnoseApp(ctk.CTk):
         self.append_to_output(f" Calculating download speed")
         self.output_text.update_idletasks()
         download = get_downspeed()
-        self.append_to_output(f" Download Speed {download} mbps \n")
+        self.append_to_output(f" Download Speed {download: .2f} mbps \n")
         self.output_text.update_idletasks()
         self.append_to_output(f" Calculating Upload speed\n")
         self.output_text.update_idletasks()
         upload = get_upspeed()
-        self.append_to_output(f" Upload Speed {upload} mbps \n")
+        self.append_to_output(f" Upload Speed {upload: .2f} mbps \n")
         self.output_text.update_idletasks()
-        self.append_to_output(f"Calculating Ping and Jitter speed\n")
+        self.append_to_output(f" Calculating Ping and Jitter speed\n")
         self.output_text.update_idletasks()
         ping = get_ping()
+        self.append_to_output(f" Ping {ping: .2f} ms ")
+        self.output_text.update_idletasks()
         jitter = get_jitter()
-        self.append_to_output(f" Ping {ping} ms \n Jitter {jitter} ms")
+        self.append_to_output(f" Calculating Jitter")
+        self.output_text.update_idletasks()
+        self.append_to_output(f" Jitter {jitter} ms")
 
-    #wifi analyisi
     def wifi_analysis(self):
         self.output_text.delete("1.0", tk.END)
         self.append_to_output(" Running Wi-Fi Analysis...")
@@ -179,11 +175,11 @@ class NetworkDiagnoseApp(ctk.CTk):
         self.append_to_output("\n\n Channels info:")
         for c in channels:
             self.append_to_output(f"{c}")
-
+   
     def run_port_scan(self):
         self.output_text.delete("1.0", tk.END)
         self.append_to_output(" Running Port Scan...")
-        self.output_text.update_idletasks
+        self.output_text.update_idletasks()
        
         ports = port_scan()
         used = ports[0]
@@ -194,7 +190,6 @@ class NetworkDiagnoseApp(ctk.CTk):
         self.append_to_output(f" \n\n Free ports:")
         for f in free:
             self.append_to_output(f" {f}")
-
     def security_check(self):
         self.output_text.delete("1.0", tk.END)
         target_ip = self.custom_prompt_input(" Enter Target IP (default: 8.8.8.8):", "8.8.8.8")
@@ -203,15 +198,27 @@ class NetworkDiagnoseApp(ctk.CTk):
 
         self.append_to_output(" Running Security Check...")
         self.append_to_output(f" Nmap Scan: {NetworkSecurityCheck.nmap_scan(target_ip, port)}")
+        self.output_text.update_idletasks()
         self.append_to_output(f" Firewall Detection: {NetworkSecurityCheck.firewall_detection(target_ip, port)}")
-        self.append_to_output(f" SSL/TLS Inspection: {NetworkSecurityCheck.ssl_tls_inspection(hostname)}")
+        self.output_text.update_idletasks()
+        #self.append_to_output(f"Inspeacting SSL/TLS")
+        #self.output_text.update_idletasks()
+        #self.append_to_output(f" SSL/TLS Inspection: {NetworkSecurityCheck.ssl_t
 
-    def run_full_report(self):
+    def log_save_email(self):
+        """Prompt to either save or email the report."""
         self.output_text.delete("1.0", tk.END)
-        self.append_to_output(" Generating Full Test Log...")
-        run()
-        self.append_to_output(" Full Test Log Completed.")
-    
+        self.append_to_output("Saving Logs..")
+        self.report_manager.save_report()
+        choice = messagebox.askyesno("Run Full Report", "Do you want to email the report? (Click 'No' to save locally)")
+        if choice:
+            recipient_email = self.custom_prompt_input("Email Report", "Enter recipient email:")
+            if recipient_email:
+                self.report_manager.email_report(recipient_email)
+                messagebox.showinfo("Report sent succesfully ")
+        else:
+            messagebox.showinfo("Report Saved", "Report saved locally")
+
     def custom_prompt_input(self, message, default):
         #Custom dialog to get user input with a default value."
         dialog = ctk.CTkToplevel(self)
@@ -249,8 +256,6 @@ class NetworkDiagnoseApp(ctk.CTk):
         dialog.wait_window()
         return dialog.user_input
 
-# Run the application
 if __name__ == "__main__":
-    ctk.set_appearance_mode("dark")  # Set dark mode (optional)
     app = NetworkDiagnoseApp()
     app.mainloop()

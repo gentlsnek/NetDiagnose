@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="NetDiagnose",  
-    version="0.1.1", 
+    version="0.2.1", 
     author="Erwin Pimenta",  
     author_email="erwinpimenta1644@gmail.com", 
     description="A cross-platform network diagnostic tool",  

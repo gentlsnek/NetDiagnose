@@ -1,9 +1,9 @@
 LICENSE
 MANIFEST.in
 README.md
+__init__.py
+main.py
 setup.py
-NetDiagnose/__init__.py
-NetDiagnose/main.py
 NetDiagnose.egg-info/PKG-INFO
 NetDiagnose.egg-info/SOURCES.txt
 NetDiagnose.egg-info/dependency_links.txt

@@ -215,9 +215,11 @@ class NetworkDiagnoseApp(ctk.CTk):
             recipient_email = self.custom_prompt_input("Email Report", "Enter recipient email:")
             if recipient_email:
                 self.report_manager.email_report(recipient_email)
-                messagebox.showinfo("Report sent succesfully ")
-        else:
-            messagebox.showinfo("Report Saved", "Report saved locally")
+                
+                self.append_to_output(f"Email sent succesfully to {recipient_email}")
+
+        self.append_to_output(f"Report saved locally")       
+        
 
     def custom_prompt_input(self, message, default):
         #Custom dialog to get user input with a default value."
@@ -255,7 +257,7 @@ class NetworkDiagnoseApp(ctk.CTk):
         dialog.user_input = default
         dialog.wait_window()
         return dialog.user_input
-
+    
 if __name__ == "__main__":
     app = NetworkDiagnoseApp()
     app.mainloop()

@@ -44,10 +44,11 @@ To get started with the network diagnostic tool, follow the installation steps b
     ```
 
 ## Usage
+```bash
+    NetDiagnose
+    ```
 
 ### Running the Tool
 
-After installation, you can run the network diagnostic tool by executing the `main.py` file:
-
-```bash
-python main.py
+## **Change Logs**
+- as of v 0.2.0 we got a gui to work with.

@@ -51,4 +51,4 @@ To get started with the network diagnostic tool, follow the installation steps b
 ### Running the Tool
 
 ## **Change Logs**
-- as of v 0.2.0 we got a gui to work with.
+- as of v 1.0.1 we got a gui to work with.

@@ -16,7 +16,7 @@ def get_iw_info():
         return("No wireless interface found.")
     try:
         result = subprocess.check_output(["iw", "dev", interface, "info"], universal_newlines=True)
-        print("Wi-Fi Interface Info (via iw):")
+        #print("Wi-Fi Interface Info (via iw):")
         return(result)
     except subprocess.CalledProcessError as e:
         return(f"Error retrieving Wi-Fi interface info via iw: {e}")
@@ -25,7 +25,7 @@ def get_iw_info():
 def get_wifi_signal_strength():
     try:
         result = subprocess.check_output(["iwconfig"], universal_newlines=True)
-        print("Wi-Fi Signal Strength (via iwconfig):")
+        #print("Wi-Fi Signal Strength (via iwconfig):")
         for line in result.splitlines():
             if "Link Quality" in line:
                 return(f"  {line.strip()}")
@@ -36,20 +36,26 @@ def get_wifi_signal_strength():
 def get_wifi_info():
     try:
         result = subprocess.check_output(["nmcli", "-t", "-f", "SSID,SIGNAL,SECURITY,CHAN", "device", "wifi", "list"], universal_newlines=True)
-        print("Available Wi-Fi Networks (via nmcli):")
+        #print("Available Wi-Fi Networks (via nmcli):")
         channels = {}
+        networks = []
+
+        chn = []
         for line in result.splitlines():
             ssid, signal, security, channel = line.split(":")
             if not security:
                 security = "None"
-            print(f"SSID: {ssid}, Signal Strength: {signal}%, Security: {security}, Channel: {channel}")
+            networks.append(f" SSID: {ssid}, Signal Strength: {signal}%, Security: {security}, Channel: {channel}")
             if channel in channels:
                 channels[channel] += 1
             else:
                 channels[channel] = 1
-        print("\nChannel Interference:")
         for channel, count in channels.items():
-            return(f"Channel {channel}: {count} networks")
+            chn.append(f" Channel {channel}: {count} networks")
+
+        return [networks, chn]
+
+
     except subprocess.CalledProcessError as e:
         return(f"Error retrieving Wi-Fi info via nmcli: {e}")
 

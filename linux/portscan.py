@@ -7,6 +7,10 @@ def port_scan():
     # Get all network connections
     connections = psutil.net_connections()
 
+    used = []
+
+    free = []
+
     for conn in connections:
         laddr = conn.laddr
         if laddr:
@@ -25,7 +29,7 @@ def port_scan():
     # Print used ports and their applications
     print("Used Ports and Applications:")
     for port, app in sorted(port_usage.items()):
-        print(f"Port {port}: {app}")
+        used.append(f"Port {port}: {app}")
 
     # Find and print ranges of free ports (assuming ports 1-65535)
     print("\nFree Port Ranges:")
@@ -43,6 +47,10 @@ def port_scan():
 
     for start, end in free_ranges:
         if start == end:
-            print(f"Port {start} is free")
+            free.append(f"Port {start} is free")
         else:
-            print(f"Ports {start}-{end} are free")
+            free.append(f"Ports {start}-{end} are free")
+
+
+
+    return [used, free]

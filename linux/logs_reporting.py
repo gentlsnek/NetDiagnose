@@ -4,20 +4,6 @@ from email.message import EmailMessage
 import smtplib
 from email.utils import formataddr
 
-# Allow import of modules from both Linux and Windows directories
-sys.path.append('linux')
-
-
-from linux.network_con import ping_test, dns_lookup, trace_route
-from linux.speedtest import speed_test
-from linux.network_interface import network_interfaces_info
-from linux.wifianalysis import get_wireless_interface, get_iw_info, get_wifi_signal_strength, get_wifi_info
-from linux.portscan import port_scan
-from linux.security import NetworkSecurityCheck
-
-
-
-
 class ReportManager:
     def __init__(self, filename="network_diagnostic_report.txt"):
         self.filename = filename
@@ -77,74 +63,11 @@ class ReportManager:
         else:
             print("No email entered. Report saved locally.")
 
-def run_all_tests(report_manager):
-    # Run network connectivity tests
-    try:
-        report_manager.append_to_report("Ping Test Result:")
-        report_manager.append_to_report(ping_test("8.8.8.8"))
-    except Exception as e:
-        report_manager.append_to_report(f"Ping Test failed: {e}")
-
-    try:
-        report_manager.append_to_report("DNS Lookup Result:")
-        report_manager.append_to_report(dns_lookup("www.google.com"))
-    except Exception as e:
-        report_manager.append_to_report(f"DNS Lookup failed: {e}")
-
-    try:
-        report_manager.append_to_report("Traceroute Result:")
-        report_manager.append_to_report(trace_route("8.8.8.8"))
-    except Exception as e:
-        report_manager.append_to_report(f"Traceroute failed: {e}")
-
-    # Run speed test
-    try:
-        report_manager.append_to_report("Speed Test Result:")
-        report_manager.append_to_report(speed_test())
-    except Exception as e:
-        report_manager.append_to_report(f"Speed Test failed: {e}")
-
-    try:
-        report_manager.append_to_report("WiFi Interface Information:")
-        report_manager.append_to_report(get_wireless_interface())
-    except Exception as e:
-        report_manager.append_to_report(f"WiFi Interface Information retrieval failed: {e}")
-
-    try:
-        report_manager.append_to_report(get_iw_info())
-    except Exception as e:
-        report_manager.append_to_report(f"WiFi Interface Info retrieval failed: {e}")
-
-    try:
-        report_manager.append_to_report("WiFi Signal Strength:")
-        report_manager.append_to_report(get_wifi_signal_strength())
-    except Exception as e:
-        report_manager.append_to_report(f"WiFi Signal Strength retrieval failed: {e}")
-
-    try:
-        report_manager.append_to_report("WiFi Details:")
-        report_manager.append_to_report(get_wifi_info())
-    except Exception as e:
-        report_manager.append_to_report(f"WiFi Details retrieval failed: {e}")
-
-    # Network security check
-    try:
-        report_manager.append_to_report("Network Security Check:")
-        report_manager.append_to_report(NetworkSecurityCheck().nmap_scan("8.8.8.8", 300))
-        report_manager.append_to_report(NetworkSecurityCheck().firewall_detection("8.8.8.8", 300))
-        report_manager.append_to_report(NetworkSecurityCheck().ssl_tls_inspection("www.google.com"))
-    except Exception as e:
-        report_manager.append_to_report(f"Network Security Check failed: {e}")
-
-    print("All tests have been run and appended to the report.")
-
 def run():
     print("running tests.....")
     # Initialize the report manager
     report_manager = ReportManager("network_diagnostic_report.txt")
-    
-    # Run all tests and append their results to the report
-    run_all_tests(report_manager)
+
     
     # Save the report locally and prompt the user for email option
     report_manager.save_and_email_report()

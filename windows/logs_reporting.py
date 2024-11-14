@@ -1,39 +1,24 @@
-import sys
 import os
 from email.message import EmailMessage
 import smtplib
 from email.utils import formataddr
 
-# Allow import of modules from both Linux and Windows directories
-
-sys.path.append('windows')
-
-# Import platform-specific modules
-
-
-from windows.network_con import ping_test, dns_lookup, trace_route
-from windows.speedtest import speed_test
-from windows.network_interface import network_interfaces_info
-from windows.wifianalysis import get_wireless_interface, get_iw_info, get_wifi_signal_strength, get_wifi_info
-from windows.portscan import port_scan
-from windows.security import NetworkSecurityCheck
-
 class ReportManager:
-    filename = "report.txt"
-    content = []
-    def __init__(filename="report.txt"):
-        ReportManager.filename = filename
-        ReportManager.content = []
+    def __init__(self, filename="network_diagnostic_report.txt"):
+        self.filename = filename
+        self.content = []
 
-    def append_to_report(text):
+    def append_to_report(self,text):
         """Appends given text to the report content list."""
-        ReportManager.content.append(text + "\n")
+        self.content.append(text)
 
-    def save_report():
-        """Saves the report content to a file on the device."""
-        with open(ReportManager.filename, "w") as file:
-            file.writelines(ReportManager.content)
-        print(f"Report saved to {ReportManager.filename}")
+    def save_report(self):
+      if not self.content:
+        print("Error: Report content is empty.")
+        return
+    # Convert all items in content to strings and join them with newline for better formatting
+      with open(self.filename, "w") as file:
+        file.writelines(str(line) + "\n" for line in self.content)
 
     def email_report(self, recipient_email):
         """Emails the report file to the specified email."""
@@ -68,23 +53,11 @@ class ReportManager:
 
     def save_and_email_report():
         """Saves the report to a file and optionally emails it."""
-        ReportManager.save_report()
-        recipient_email = input("Enter the recipient email address (or leave blank to skip): ").strip()
         
+        recipient_email = input("Enter the recipient email address (or leave blank to skip): ").strip()
         if recipient_email:
             ReportManager.email_report(recipient_email)
         else:
+            ReportManager.save_report()
             print("No email entered. Report saved locally.")
 
-# Usage example
-
-if __name__ == "__main__":
-    report_manager = ReportManager()
-
-    # Append content to the report
-    report_manager.append_to_report("Ping Test: Success")
-    report_manager.append_to_report("Speed Test: Download - 100 Mbps, Upload - 50 Mbps")
-    report_manager.append_to_report("Network Interface: eth0, Status: Up")
-
-    # Save and optionally email the report
-    report_manager.save_and_email_report()

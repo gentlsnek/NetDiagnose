@@ -1,4 +1,0 @@
-scapy
-psutil
-speedtest-cli
-ping3

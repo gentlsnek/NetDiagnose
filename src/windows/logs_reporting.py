@@ -2,23 +2,34 @@ import os
 from email.message import EmailMessage
 import smtplib
 from email.utils import formataddr
+from fpdf import FPDF
 
 class ReportManager:
-    def __init__(self, filename="network_diagnostic_report.txt"):
+    def __init__(self, filename="network_diagnostic_report.pdf"):
         self.filename = filename
         self.content = []
 
-    def append_to_report(self,text):
+    def append_to_report(self, text):
         """Appends given text to the report content list."""
         self.content.append(text)
 
     def save_report(self):
-      if not self.content:
-        print("Error: Report content is empty.")
-        return
-    # Convert all items in content to strings and join them with newline for better formatting
-      with open(self.filename, "w") as file:
-        file.writelines(str(line) + "\n" for line in self.content)
+        if not self.content:
+            print("Error: Report content is empty.")
+            return
+
+        # Create a PDF document
+        pdf = FPDF()
+        pdf.add_page()
+        pdf.set_font("Arial", size=12)
+
+        # Add content to the PDF
+        for line in self.content:
+            pdf.multi_cell(0, 10, str(line))
+
+        # Save the PDF to a file
+        pdf.output(self.filename)
+        print(f"Report saved as {self.filename}")
 
     def email_report(self, recipient_email):
         """Emails the report file to the specified email."""
@@ -51,13 +62,12 @@ class ReportManager:
         except Exception as e:
             print(f"Error sending email: {e}")
 
-    def save_and_email_report():
+    def save_and_email_report(self):
         """Saves the report to a file and optionally emails it."""
-        
+        self.save_report()
         recipient_email = input("Enter the recipient email address (or leave blank to skip): ").strip()
         if recipient_email:
-            ReportManager.email_report(recipient_email)
+            self.email_report(recipient_email)
         else:
-            ReportManager.save_report()
             print("No email entered. Report saved locally.")
 

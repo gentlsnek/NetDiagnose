@@ -69,16 +69,3 @@ class NetworkSecurityCheck:
             result["error"] = f"Unexpected error: {e}"
 
         return result
-
-# Example usage
-target_ip = "8.8.8.8"
-security_check = NetworkSecurityCheck(target_ip)
-
-print("Nmap Scan (if available):")
-print(security_check.nmap_scan(80))
-
-print("\nFirewall Detection:")
-print(security_check.firewall_detection(80))
-
-print("\nSSL/TLS Inspection:")
-print(security_check.ssl_tls_inspection())

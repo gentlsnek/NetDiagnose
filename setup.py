@@ -5,14 +5,15 @@ with open("README.md", "r") as fh:
 
 setup(
     name="NetDiagnose",  
-    version="0.2.1", 
+    version="1.0.3", 
     author="Erwin Pimenta",  
     author_email="erwinpimenta1644@gmail.com", 
-    description="A cross-platform network diagnostic tool",  
+    description="A network diagnostic assistant",  
     long_description=long_description, 
     long_description_content_type="text/markdown",  
     url="https://github.com/gentlsnek/NetDiagnose",  
-    packages=find_packages(), 
+    packages=find_packages(where="src"), 
+    package_dir={"": "src"},
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
@@ -20,14 +21,17 @@ setup(
     ],
     python_requires=">=3.6", 
     install_requires=[
+        'customtkinter', 
         'scapy', 
         'psutil',
         'speedtest-cli',
         'ping3',
+        'fpdf',
     ],
     entry_points={ 
         "console_scripts": [
-            "NetDiagnose = NetDiagnose.main:main", 
+            "NetDiagnose = main:main", 
         ],
     },
+    include_package_data=True,
 )

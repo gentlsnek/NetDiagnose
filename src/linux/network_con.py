@@ -5,7 +5,7 @@ import socket
 
 def ping_test(destination):
     try:
-        # Ping the destination
+  
         result = subprocess.run(["ping", "-c", "10", "8.8.8.8"], capture_output=True, text=True, timeout=100)
         if result.returncode == 0:
             pass
@@ -19,7 +19,7 @@ def ping_test(destination):
 
 def dns_lookup(domain):
     try:
-        # DNS lookup for the given domain
+
         #print(f"DNS lookup for {domain}:")
         ip_address = socket.gethostbyname(domain)
         return(f"{domain} has IP address {ip_address}")

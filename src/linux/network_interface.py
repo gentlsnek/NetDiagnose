@@ -3,7 +3,7 @@ import socket
 
 
 def network_interfaces_info():
-    # Retrieve network interface details
+
     interfaces = psutil.net_if_addrs()
     stats = psutil.net_if_stats()
 
@@ -13,7 +13,7 @@ def network_interfaces_info():
     for interface_name, addresses in interfaces.items():
         #print(f"\nInterface: {interface_name}")
         
-        # Display interface stats (is it up, duplex, speed, MTU)
+ 
         if interface_name in stats:
             iface_stats = stats[interface_name]
             interf.append(f" Interface: {interface_name} \n")
@@ -21,8 +21,7 @@ def network_interfaces_info():
             interf.append(f" Duplex: {iface_stats.duplex} \n")
             interf.append(f" Speed: {iface_stats.speed} Mbps \n")
             interf.append(f" MTU: {iface_stats.mtu} \n\n")
-        
-        # Display IP addresses and MAC address
+
         for address in addresses:
             if address.family == socket.AF_NETLINK:
                 

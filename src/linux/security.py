@@ -1,7 +1,7 @@
 import socket
 import ssl
 import subprocess
-from datetime import datetime
+from scapy.all import IP, TCP, sr1
 
 class NetworkSecurityCheck:
     def __init__(self, target_ip):
@@ -9,47 +9,45 @@ class NetworkSecurityCheck:
 
     @staticmethod
     def is_nmap_installed():
-        # Check if Nmap is installed (useful if running Windows with Nmap installed)
         try:
             result = subprocess.run(["nmap", "--version"], capture_output=True, text=True)
             return result.returncode == 0
         except FileNotFoundError:
             return False
-    
-    def nmap_scan(self, port):
-        if not self.is_nmap_installed():
-            return "Nmap is not installed on this system."
+
+    def nmap_scan(target_ip):
         try:
-            result = subprocess.run(["nmap", "-Pn", "-p", str(port), self.target_ip], capture_output=True, text=True)
+            result = subprocess.run(["nmap", "-Pn", target_ip], capture_output=True, text=True)
             return result.stdout
         except Exception as e:
             return f"Error running nmap: {e}"
 
-    def firewall_detection(self, port):
-        # Simple socket connection test for open/closed ports (no raw packet manipulation)
+    def firewall_detection(target_ip, port):
         try:
-            with socket.create_connection((self.target_ip, port), timeout=2) as s:
+            with socket.create_connection((target_ip, port), timeout=2) as sock:
                 return f"Port {port} is open and reachable."
-        except (socket.timeout, ConnectionRefusedError):
-            return f"Port {port} seems closed or blocked by a firewall."
+        except socket.timeout:
+            return f"Port {port} seems filtered or blocked by a firewall."
+        except ConnectionRefusedError:
+            return f"Port {port} is closed but not filtered by a firewall."
         except Exception as e:
             return f"Error in firewall detection: {e}"
 
-    def ssl_tls_inspection(self, hostname=None, port=443):
-        # SSL/TLS certificate inspection for HTTPS ports
-        hostname = hostname or self.target_ip
+    def ssl_tls_inspection(hostname=None, port=443, target_ip='8.8.8.8'):
+        hostname = hostname or target_ip
         result = {
             "hostname": hostname,
             "ssl_version": None,
             "certificate_valid": False,
             "issuer": None,
             "expiry_date": None,
+            "subject": None,
             "error": None
         }
 
         try:
             context = ssl.create_default_context()
-            with socket.create_connection((self.target_ip, port), timeout=5) as sock:
+            with socket.create_connection((target_ip, port)) as sock:
                 with context.wrap_socket(sock, server_hostname=hostname) as ssock:
                     cert = ssock.getpeercert()
                     result["ssl_version"] = ssock.version()
@@ -60,25 +58,14 @@ class NetworkSecurityCheck:
                         result["certificate_valid"] = True
                     result["issuer"] = ', '.join(f"{name[0]}={name[1]}" for name in cert.get("issuer", []))
                     result["expiry_date"] = cert.get("notAfter")
-                    # Convert expiry_date to a datetime object for easier processing
-                    if result["expiry_date"]:
-                        result["expiry_date"] = datetime.strptime(result["expiry_date"], "%b %d %H:%M:%S %Y %Z")
+                    result["subject"] = ', '.join(f"{name[0]}={name[1]}" for name in cert.get("subject", []))
         except ssl.SSLCertVerificationError as e:
             result["error"] = f"SSL Certificate Verification Error: {e}"
+        except socket.timeout:
+            result["error"] = "Connection timed out."
+        except ConnectionRefusedError:
+            result["error"] = "Connection refused."
         except Exception as e:
             result["error"] = f"Unexpected error: {e}"
 
         return result
-
-# Example usage
-target_ip = "8.8.8.8"
-security_check = NetworkSecurityCheck(target_ip)
-
-print("Nmap Scan (if available):")
-print(security_check.nmap_scan(80))
-
-print("\nFirewall Detection:")
-print(security_check.firewall_detection(80))
-
-print("\nSSL/TLS Inspection:")
-print(security_check.ssl_tls_inspection())
